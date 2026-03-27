@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://employee-payroll-system-uw6d.onrender.com/api',
 });
 
 // Attach JWT token to every request
