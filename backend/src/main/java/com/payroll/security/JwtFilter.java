@@ -21,6 +21,20 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
+    /**
+     * Do not parse JWT on login/register — a stale Bearer token would otherwise
+     * populate the security context before password authentication runs.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        if (path != null && !path.isEmpty() && path.startsWith("/api/auth")) {
+            return true;
+        }
+        String uri = request.getRequestURI();
+        return uri != null && uri.contains("/api/auth/");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
